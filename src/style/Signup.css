@@ -1,0 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Londrina+Shadow&display=swap');
+
+@font-face {
+    font-family: 'omyu_pretty';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-01@1.0/omyu_pretty.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body, html {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Rubik', sans-serif;
+}
+
+.signup-wrapper {
+    flex-direction: column;
+    width: 100%;
+}
+
+.signup-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100vh; /* Adjust this value as needed */
+    align-items: center;
+}
+
+.title {
+    font-family: 'Londrina Shadow', serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 6rem;
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+.box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.id, .password {
+    border: none;
+    border-bottom: 2px solid black;
+    font-family: 'omyu_pretty', sans-serif;
+}
+
+.id:focus, .password:focus {
+    outline: none;
+}
+
+.confirm {
+    font-family: 'omyu_pretty', sans-serif;
+    color: black;
+    background-color: white;
+    border: 1.7px solid black;
+    border-radius: 3.5px;
+}

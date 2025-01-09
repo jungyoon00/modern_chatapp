@@ -1,0 +1,115 @@
+@import
+url('https://fonts.googleapis.com/css2?family=Roboto+Slab&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+@font-face {
+    font-family: 'omyu_pretty';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-01@1.0/omyu_pretty.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.user-wrapper {
+    width: 100%;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    font-family: 'Rubik', sans-serif;
+    box-sizing: border-box;
+    text-align: left; /* 왼쪽 정렬 */
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.profile-icon {
+    width: 80px;
+    height: 80px;
+    margin-right: 20px;
+    border: 2px solid black;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: white;
+}
+
+.profile-icon:hover {
+    cursor: pointer;
+}
+
+.profile-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.placeholder-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    font-size: 12px;
+    color: black;
+    text-align: center;
+}
+
+.profile-name {
+    font-family: 'Londrina Shadow', serif;
+    font-size: 35px;
+    font-weight: bold;
+    color: black;
+}
+
+.user-info {
+    font-family: 'omyu_pretty', sans-serif;
+    margin-left: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    color: black;
+    line-height: 1.8;
+}
+
+.btns {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+button.editInfo, button.quitEdit {
+    display: block;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: black;
+    color: #E2F1E7;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+}
+
+button.editInfo:hover, button.quitEdit:hover {
+    background-color: #333333;
+}
+
+.edit-field div {
+    font-family: 'omyu_pretty', sans-serif;
+    font-size: 15px;
+    gap: 7px;
+    margin-top: 20px;
+}
+
+.edit-field input {
+    font-family: 'omyu_pretty', sans-serif;
+    font-size: 15px;
+    width: 30%;
+    border: none;
+    border-bottom: 1.7px solid black;
+}
+
+.edit-field input:focus {
+    outline: none;
+}

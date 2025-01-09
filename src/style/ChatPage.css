@@ -1,0 +1,415 @@
+@import
+url('https://fonts.googleapis.com/css2?family=Roboto+Slab&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+@font-face {
+    font-family: 'omyu_pretty';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-01@1.0/omyu_pretty.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.chat-wrapper {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+/* 채팅방 목록 영역 */
+.rooms-view {
+  width: 25%;
+  background-color: white;
+  padding: 20px;
+  overflow-y: auto;
+  border-right: 1.3px solid rgba(0, 0, 0, 0.9);
+}
+
+.rooms-view .create-button {
+  font-family: 'omyu_pretty', sans-serif;
+  color: black;
+  background-color: white;
+  border: 1.7px solid black;
+  border-radius: 3.5px;
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 12px;
+  font-size: 16px;
+}
+
+.rooms-view .room-list {
+  font-family: 'omyu_pretty', sans-serif;
+  color: black;
+  background-color: white;
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 12px;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.rooms-view .create-button:hover {
+  background-color: #f0f0f0;
+  cursor: pointer;
+}
+
+.rooms-view .room-list:hover {
+  background-color: #f0f0f0;
+  cursor: pointer;
+}
+
+/* 채팅 영역 */
+.chats-view {
+    width: 75%;
+    display: flex;
+    flex-direction: column;
+    background-color: white; /* Softer white */
+}
+
+.chat-output {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.chat-output ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.chat-output li {
+  margin-bottom: 15px;
+  padding: 12px;
+  border-radius: 10px;
+  max-width: 50%;
+  width: auto; /* Adjust width based on content */
+  word-wrap: break-word;
+  position: relative;
+}
+
+.chat-output li.sent {
+    background-color: #2c6fb2; /* Darker blue color for sent messages */
+    color: #E2F1E7;
+    margin-left: auto;
+    text-align: right;
+  }
+
+.chat-output li.received {
+    background-color: #333333; /* Dark gray background */
+    color: #ffffff; /* White text color */
+    border: 1px solid #000000; /* Black border */
+    margin-right: auto;
+    text-align: left;
+}
+
+.chat-output li.sent::after {
+    content: "";
+    position: absolute;
+    right: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 6px solid transparent;
+    border-left-color: #2c6fb2; /* Match the background color */
+  }
+
+.chat-output li.received::after {
+  content: "";
+  position: absolute;
+  left: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 6px solid transparent;
+  border-right-color: black;
+}
+
+.chat-output li strong {
+  color: white;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.chat-output small {
+  display: block;
+  font-size: 12px;
+  color: white;
+  margin-top: 8px;
+}
+
+.chat-output li.received span {
+  display: flex;
+  gap: 5px;
+}
+
+.small-profile {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.chat-output .placeholder {
+  font-family: 'omyu_pretty', sans-serif;
+  text-align: center;
+  color: #333333;
+  font-size: 14px;
+  margin-top: 20px;
+}
+
+.chat-output::-webkit-scrollbar {
+    width: 12px; /* Adjust the width of the scrollbar */
+}
+  
+.chat-output::-webkit-scrollbar-track {
+    background: #ffffff; /* Background of the scrollbar track */
+}
+  
+.chat-output::-webkit-scrollbar-thumb {
+    background-color: #333333; /* Color of the scrollbar thumb */
+    border-radius: 10px; /* Rounded corners for the scrollbar thumb */
+    border: 3px solid #ffffff; /* Adds space around the thumb */
+}
+
+/* 채팅 입력 영역 */
+.chat-input {
+  display: flex;
+  padding: 10px;
+}
+
+.chat-input input[type="text"] {
+  flex: 1;
+  padding: 9px;
+  height: 4.5vh;
+  font-size: 16px;
+  border: none;
+  border-bottom: 2px solid black;
+  color: black;
+  margin-right: 10px;
+  outline: none;
+}
+
+.chat-input input[type="text"]::placeholder {
+  color: black;
+}
+
+.chat-input input[type="text"]:focus {
+    background-color: #f0f0f0;
+}
+
+.chat-enter, .emoji {
+  padding: 15px 20px;
+  border: none;
+  border-radius: 999px;
+  background-color: black;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-right: 5px;
+}
+
+.chat-enter:hover, .emoji:hover {
+  background-color: #333333;
+  cursor: pointer;
+}
+
+/* 팝업 스타일 */
+
+.popup-create-room {
+  font-family: 'omyu_pretty', sans-serif;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: black;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  box-sizing: border-box;
+  width: 400px;
+  max-height: 500px; /* 높이 제한 */
+  z-index: 1000;
+  color: white;
+}
+
+.popup-create-room h3 {
+  text-align: center;
+  margin-bottom: 15px;
+  font-size: 18px;
+  color: white;
+}
+
+.room-name-input {
+  font-family: 'omyu_pretty', sans-serif;
+  width: calc(100%); /* Adjust for padding inside the container */
+  box-sizing: border-box;
+  padding: 8px;
+  margin-bottom: 15px;
+  border: 1px solid white;
+  border-radius: 4px;
+  outline: none;
+  font-size: 14px;
+  background-color: white;
+  color: #243642;
+}
+
+.friend-list-container {
+  max-height: 200px; /* 친구 목록 컨테이너 높이 제한 */
+  overflow-y: auto;
+  background-color: #2c6fb2;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+.friend-list-container ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.friend-list-container li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #2c6fb2;
+  color: #E2F1E7;
+}
+
+.popup-create-room button {
+  font-family: 'omyu_pretty', sans-serif;
+  padding: 8px 16px;
+  margin: 10px 5px 0;
+  background: white;
+  color: black;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.popup-create-room button:hover {
+    background-color: #f0f0f0;
+    cursor: pointer;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.locked-setting {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.locked-setting .toggleLocker {
+  background: none;
+  color: white;
+  flex-shrink: 0; /* Prevent the button from shrinking */
+}
+
+.locked-setting .toggleLocker:hover {
+  background: none;
+  cursor: pointer;
+}
+
+.locked-setting .roomPW-input {
+  flex-grow: 1; /* Allow the input to grow and take available space */
+  margin-left: 10px; /* Add some space between the button and the input */
+  height: calc(100%);
+  font-family: 'omyu_pretty', sans-serif;
+  box-sizing: border-box;
+  padding: 8px;
+  border: 1px solid white;
+  border-radius: 4px;
+  outline: none;
+  font-size: 14px;
+  background-color: white;
+  color: #243642;
+}
+
+.locked-setting .blind {
+  flex-grow: 1; /* Allow the input to grow and take available space */
+  margin-left: 10px; /* Add some space between the button and the input */
+  height: calc(100%);
+  font-family: 'omyu_pretty', sans-serif;
+  box-sizing: border-box;
+  padding: 8px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  outline: none;
+  font-size: 14px;
+  background-color: #e0e0e0;
+  color: #243642;
+}
+
+.close-popup {
+  font-family: 'omyu_pretty', sans-serif;
+  display: block;
+  margin: 0 auto;
+  padding: 8px 16px;
+  background: white;
+  color: black;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.close-popup:hover {
+    background-color: #f0f0f0;
+    cursor: pointer;
+}
+
+.popup-enter-room {
+  font-family: 'omyu_pretty', sans-serif;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: black;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  box-sizing: border-box;
+  width: 400px;
+  max-height: 500px; /* 높이 제한 */
+  z-index: 1000;
+  color: white;
+}
+
+.popup-enter-room h3 {
+  text-align: center;
+  margin-bottom: 15px;
+  font-size: 18px;
+  color: white;
+}
+
+.roomPW-input {
+  font-family: 'omyu_pretty', sans-serif;
+  width: calc(100%); /* Adjust for padding inside the container */
+  box-sizing: border-box;
+  padding: 8px;
+  margin-bottom: 15px;
+  border: 1px solid white;
+  border-radius: 4px;
+  outline: none;
+  font-size: 14px;
+  background-color: white;
+  color: #243642;
+}
+
+.popup-enter-room button {
+  font-family: 'omyu_pretty', sans-serif;
+  padding: 8px 16px;
+  margin: 10px 5px 0;
+  background: white;
+  color: black;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
