@@ -1,14 +1,17 @@
 import { useState } from "react";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { database } from "../firebaseDB/firebaseConfig";
+import { useNavigate } from "react-router-dom";
 import bcrypt from "bcryptjs";
 import "../style/Signup.css";
 
 function Signup() {
+    const navigate = useNavigate();
 
     const [userID, setUserID] = useState("");
     const [userPW, setUserPW] = useState("");
     const [userPWCheck, setUserPWCheck] = useState("");
+    const [showModal, setShowModal] = useState(false);
 
     const handleUserID = (e) => {
         setUserID(e.target.value);
@@ -66,6 +69,7 @@ function Signup() {
         const hashedPW = bcrypt.hashSync(userPW, 10);
         const userData = { userID: userID, userPW: hashedPW };
         createAccount(userData);
+        setShowModal(true);
     }
 
     return (
@@ -103,6 +107,15 @@ function Signup() {
                     <a href="/">Login</a>
                 </div>
             </div>
+
+            {showModal &&
+            <div className="modal" style={{ display: showModal ? "block" : "none" }}>
+                <div className="modal-content">
+                    <h3>Alert</h3>
+                    <p>Your account is created.</p>
+                    <button className="modal-close" onClick={() => {setShowModal(false); navigate("/")}}>OK</button>
+                </div>
+            </div>}
         </div>
     );
 }

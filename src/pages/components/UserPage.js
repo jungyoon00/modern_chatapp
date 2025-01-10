@@ -4,7 +4,7 @@ import { database } from "../../firebaseDB/firebaseConfig";
 import "../../style/UserPage.css";
 
 function UserPage(props) {
-    const defaultProfileImg = "https://imgur.com/a/HC231Lj";
+    const defaultProfileImg = "https://i.imgur.com/vGQOCga.jpeg";
     const userID = props.userID;
     const [userData, setUserData] = useState({});
     const [isEditing, setIsEditing] = useState(false); // 수정 모드 상태
@@ -79,14 +79,18 @@ function UserPage(props) {
             const formData = new FormData();
             formData.append("image", uploadFile);
 
-            if (originImg !== "") {
-                const deleteHash = originImg.split('/').pop().split('.')[0];
-                await fetch(`https://api.imgur.com/3/image/${deleteHash}`, {
-                    method: "DELETE",
-                    headers: {
-                        Authorization: `Client-ID ${process.env.REACT_APP_IMGUR_CLIENT_ID}`,
-                    },
-                });
+            try {
+                if (originImg !== "") {
+                    const deleteHash = originImg.split('/').pop().split('.')[0];
+                    await fetch(`https://api.imgur.com/3/image/${deleteHash}`, {
+                        method: "DELETE",
+                        headers: {
+                            Authorization: `Client-ID ${process.env.REACT_APP_IMGUR_CLIENT_ID}`,
+                        },
+                    });
+                }
+            } catch (e) {
+                console.error("There was no image to delete.");
             }
 
             const res = await fetch("https://api.imgur.com/3/image", {

@@ -41,17 +41,17 @@ function Login() {
             const hashedPW = userDocData.password;
 
             bcrypt.compare(userPW, hashedPW, (err, result) => {
-                if (result === true) {
+                if (result) {
                     console.log("Password match");
+
+                    setGlobalID(userData.userID);
+                    setActivate(true);
+                    navigate("/home");
                 } else {
                     console.error("Password does not match");
                     return;
                 }
             });
-
-            setGlobalID(userData.userID);
-            setActivate(true);
-            navigate("/home");
         } catch (e) {
             console.error("Error reading document: ", e);
         }

@@ -65,6 +65,11 @@ body, html {
     border-radius: 3.5px;
 }
 
+.confirm:hover {
+    background-color: #f0f0f0;
+    cursor: pointer;
+}
+
 .signup-link {
     margin-top: 1rem;
     font-family: 'omyu_pretty', sans-serif;
