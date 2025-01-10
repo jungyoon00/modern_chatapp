@@ -7,6 +7,7 @@ import { CiLock } from "react-icons/ci";
 import { CiUnlock } from "react-icons/ci";
 
 function ChatPage(props) {
+    const defaultProfileImg = "https://imgur.com/a/HC231Lj";
     const userID = props.userID;
     const [rooms, setRooms] = useState([]);
     const [datas, setDatas] = useState([]);
@@ -259,7 +260,7 @@ function ChatPage(props) {
                                     <p>
                                         <span>
                                             {message.userID === props.userID ? "" : <>
-                                            <img className="small-profile" src={selectedRoomProfiles[message.userID]}></img>
+                                            <img className="small-profile" src={selectedRoomProfiles[message.userID] || defaultProfileImg}></img>
                                             <strong>{message.userID}</strong>
                                         </>}
                                         </span>

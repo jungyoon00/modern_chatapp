@@ -4,11 +4,13 @@ import { database } from "../../firebaseDB/firebaseConfig";
 import "../../style/UserPage.css";
 
 function UserPage(props) {
+    const defaultProfileImg = "https://imgur.com/a/HC231Lj";
     const userID = props.userID;
     const [userData, setUserData] = useState({});
     const [isEditing, setIsEditing] = useState(false); // 수정 모드 상태
     const [editData, setEditData] = useState({}); // 수정할 데이터 상태
     const [uploadImgUrl, setUploadImgUrl] = useState("");
+    const [originImg, setOriginImg] = useState("");
 
     useEffect(() => {
         const unsubscribe = onSnapshot(doc(database, "UserInfo", userID), (snapshot) => {
@@ -20,9 +22,10 @@ function UserPage(props) {
                     userEmail: getData.email,
                     userInsta: getData.instagram,
                     userMore: getData.more,
-                    profileImage: getData.profileImage || "", // 프로필 이미지 URL
+                    profileImage: getData.profileImage || defaultProfileImg, // 프로필 이미지 URL
                 };
                 setUserData(data);
+                setOriginImg(data.profileImage);
                 if (!isEditing) setEditData(data);
             } else {
                 console.log("등록된 정보가 없습니다");
@@ -69,15 +72,35 @@ function UserPage(props) {
         }
     };
 
-    const onchangeImageUpload = (e) => {
+    const onchangeImageUpload = async (e) => {
         const {files} = e.target;
         const uploadFile = files[0];
         if (uploadFile) {
-            const reader = new FileReader();
-            reader.readAsDataURL(uploadFile);
-            reader.onloadend = () => {
-                setUploadImgUrl(reader.result);
+            const formData = new FormData();
+            formData.append("image", uploadFile);
+
+            if (originImg !== "") {
+                const deleteHash = originImg.split('/').pop().split('.')[0];
+                await fetch(`https://api.imgur.com/3/image/${deleteHash}`, {
+                    method: "DELETE",
+                    headers: {
+                        Authorization: `Client-ID ${process.env.REACT_APP_IMGUR_CLIENT_ID}`,
+                    },
+                });
             }
+
+            const res = await fetch("https://api.imgur.com/3/image", {
+                method: "POST",
+                headers: {
+                    Authorization: `Client-ID ${process.env.REACT_APP_IMGUR_CLIENT_ID}`,
+                    Accept: 'application/json',
+                },
+                body: formData,
+            });
+            const result = await res.json();
+            const { link } = result.data;
+
+            setUploadImgUrl(link);
         }
     }
 
@@ -87,7 +110,6 @@ function UserPage(props) {
                 // 수정 모드일 때 입력 필드 표시
                 <>
                     <div className="img-field profile-icon">
-
                         {uploadImgUrl ? (
                                 <img
                                     src={uploadImgUrl}

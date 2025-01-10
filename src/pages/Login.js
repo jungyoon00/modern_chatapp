@@ -1,5 +1,5 @@
 import useGlobalState from "../store/zustandStore";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { database } from "../firebaseDB/firebaseConfig";
@@ -84,6 +84,9 @@ function Login() {
                     onChange={handleUserPW}
                 />
                 <button className="confirm" onClick={onClickConfirmBtn}>Confirm</button>
+                </div>
+                <div className="signup-link">
+                    <a href="/signup">Sign up</a>
                 </div>
             </div>
         </div>

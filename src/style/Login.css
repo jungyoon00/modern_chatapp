@@ -64,3 +64,17 @@ body, html {
     border: 1.7px solid black;
     border-radius: 3.5px;
 }
+
+.signup-link {
+    margin-top: 1rem;
+    font-family: 'omyu_pretty', sans-serif;
+}
+
+.signup-link a {
+    color: black;
+    text-decoration: underline;
+}
+
+.signup-link a:hover {
+    cursor: pointer;
+}

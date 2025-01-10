@@ -1,12 +1,10 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { database } from "../firebaseDB/firebaseConfig";
 import bcrypt from "bcryptjs";
 import "../style/Signup.css";
 
 function Signup() {
-    const navigate = useNavigate();
 
     const [userID, setUserID] = useState("");
     const [userPW, setUserPW] = useState("");
@@ -100,6 +98,9 @@ function Signup() {
                         onChange={handleUserPWCheck}
                     />
                     <button className="confirm" onClick={onClickConfirmBtn}>Confirm</button>
+                </div>
+                <div className="login-link">
+                    <a href="/">Login</a>
                 </div>
             </div>
         </div>
