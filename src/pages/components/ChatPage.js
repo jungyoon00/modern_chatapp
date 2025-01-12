@@ -171,17 +171,19 @@ function ChatPage(props) {
           prev.includes(friendID) ? prev.filter((id) => id !== friendID) : [...prev, friendID]);
     }
 
-    const joinRoom = async (roomID) => {
+    const joinRoom = async (members, roomID) => {
         try {
-            const userRef = doc(database, "UserInfo", userID);
+            members.forEach(async (member) => {
+                const userRef = doc(database, "UserInfo", member);
+                const userSnap = await getDoc(userRef);
+                const data = userSnap.data();
+
+                await updateDoc(userRef, {
+                    rooms: [...data.rooms, roomID],
+                });
+            })
+
             const roomRef = doc(database, "ChatRooms", roomID);
-    
-            // 나의 채팅방 목록 업데이트
-            await updateDoc(userRef, {
-                rooms: [...rooms, roomID],
-            });
-    
-            // 채팅방의 members 업데이트
             const roomSnapshot = await getDoc(roomRef);
             const roomData = roomSnapshot.data();
     
@@ -207,9 +209,11 @@ function ChatPage(props) {
           locked: locked,
           password: roomPW,
         });
+
+        const members = [props.userID, ...selectedFriends];
     
         setRooms([...rooms, newRoomRef.id]);
-        joinRoom(newRoomRef.id);
+        joinRoom(members, newRoomRef.id);
         setRoomPW("");
         togglePopup();
     }
@@ -401,7 +405,7 @@ function ChatPage(props) {
                         className="roomPW-input"
                     />
                     <div className="button-container">
-                        <button onClick={checkRoomPW}>Enter</button>
+                        <button className="popup-enter" onClick={checkRoomPW}>Enter</button>
                         <button className="close-popup" onClick={() => setShowPWView(false)}>
                             Cancel
                         </button>

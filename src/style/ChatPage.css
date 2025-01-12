@@ -418,6 +418,10 @@ url('https://fonts.googleapis.com/css2?family=Roboto+Slab&family=Rubik:ital,wght
   transition: background-color 0.3s;
 }
 
+.popup-enter:hover {
+  background-color: #f0f0f0;
+}
+
 /* 전체 화면 어두운 배경 */
 .overlay {
   position: fixed;

@@ -24,7 +24,7 @@ function Home() {
     function logout() {
         setGlobalID("");
         setActivate(false);
-        navigator("/");
+        navigator("/login");
     }
 
     return (

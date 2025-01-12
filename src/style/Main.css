@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Londrina+Shadow&display=swap');
+
+@font-face {
+    font-family: 'omyu_pretty';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-01@1.0/omyu_pretty.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.main-wrapper {
+    display: flex;
+    justify-content: space-between; /* left-section과 right-section을 양 끝으로 배치 */
+    align-items: center; /* 세로 가운데 정렬 */
+    width: 100vw; /* 가로 전체를 사용 */
+    height: 90vh; /* 세로 전체를 사용 */
+    box-sizing: border-box; /* padding을 포함하여 width와 height 계산 */
+    padding: 50px;
+}
+
+.left-section {
+    font-family: 'Londrina Shadow', serif;
+    font-size: 95px;
+    margin-left: 50px;
+    text-align: left; /* 텍스트를 왼쪽 정렬 */
+}
+
+.left-section p {
+    margin: 0;
+}
+
+.right-section {
+    display: flex;
+    margin-right: 50px;
+    flex-direction: column; /* 버튼을 세로로 정렬 */
+    gap: 10px; /* 버튼 간 간격 */
+}
+
+.right-section button {
+    width: 80px;
+    height: 25px;
+    font-family: 'omyu_pretty', sans-serif;
+    color: black;
+    background-color: white;
+    border: 1.7px solid black;
+    border-radius: 3.5px;
+}
+
+.right-section button:hover {
+    background-color: #f0f0f0;
+    cursor: pointer;
+}
+
+.footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black; /* 밝은 글자 색상 */
+    font-size: 14px; /* 텍스트 크기 */
+    padding: 0 10px;
+    font-family: 'omyu_pretty', sans-serif;
+}
+
+/* 푸터의 이미지와 텍스트 */
+.footer img {
+    width: 20px; /* 적당한 크기 */
+    height: 20px;
+    margin-left: 5px;
+    margin-right: 2px;
+    border-radius: 50%; /* 원형으로 변경 */
+    object-fit: cover; /* 이미지가 잘리지 않도록 조정 */
+    border: 2px solid #E2F1E7; /* 테두리 추가 */
+}
+
+.footer a {
+    text-decoration: none; /* 밑줄 제거 */
+    color: black; /* 링크 색상 */
+    font-weight: bold;
+}
