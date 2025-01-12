@@ -26,6 +26,9 @@ function ChatPage(props) {
     const [locked, setLocked] = useState(false);
     const [roomPW, setRoomPW] = useState("");
 
+    const [userData, setUserData] = useState({});
+    const [showCard, setShowCard] = useState(false);
+
     useEffect(() => {
         const unsubscribe = onSnapshot(
             doc(database, "UserInfo", props.userID), 
@@ -69,7 +72,7 @@ function ChatPage(props) {
         const docRef = doc(database, "ChatRooms", roomID);
         const messagesRef = collection(docRef, "history");
 
-        const q = query(messagesRef, orderBy("time", "asc"), limit(300)); // 오래된 메시지 순으로 정렬
+        const q = query(messagesRef, orderBy("time", "asc"), limit(500)); // 오래된 메시지 순으로 정렬
 
         const unsubscribe = onSnapshot(q, (snapshot) => {
             const messages = snapshot.docs.map((doc) => ({
@@ -234,6 +237,27 @@ function ChatPage(props) {
         setShowPWView(false);
     }
 
+    async function getUserData(userID) {
+        const docRef = doc(database, "UserInfo", userID);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            setUserData(docSnap.data());
+        } else {
+            console.log("No such document!");
+        }
+    }
+
+    const toggleCard = (userID) => {
+        getUserData(userID);
+        setShowCard((prev) => !prev);
+    }
+
+    const closeCard = () => {
+        setUserData({});
+        setShowCard(false);
+    }
+
     return (
         <div className="chat-wrapper">
             <div className="rooms-view">
@@ -260,7 +284,12 @@ function ChatPage(props) {
                                     <p>
                                         <span>
                                             {message.userID === props.userID ? "" : <>
-                                            <img className="small-profile" src={selectedRoomProfiles[message.userID] || defaultProfileImg}></img>
+                                            <img 
+                                                className="small-profile"
+                                                alt="profile"
+                                                src={selectedRoomProfiles[message.userID] || defaultProfileImg}
+                                                onClick={() => toggleCard(message.userID)}
+                                            ></img>
                                             <strong>{message.userID}</strong>
                                         </>}
                                         </span>
@@ -292,6 +321,36 @@ function ChatPage(props) {
                         <button className="chat-enter" onClick={handleSendMessage}>Enter</button>
                     </div>
                 )}
+            </div>
+
+            {/* Dard Background */}
+            <div
+                className={`overlay ${showCard ? "show" : ""}`}
+                onClick={closeCard}
+            ></div>
+            {/* Card */}
+            <div className={`card-slide-container ${showCard ? "show" : ""}`}>
+                <div className="card-profile-frame">
+                    <div className="card-profile-header">
+                        <div className="card-profile-icon">
+                            {userData.profileImage ? (
+                                <img
+                                    src={userData.profileImage}
+                                    alt="User Profile"
+                                    className="card-profile-image"
+                                />
+                            ) : (
+                                <div className="card-placeholder-icon">No Image</div>
+                            )}
+                        </div>
+                        <div className="card-profile-name">{userData.name}</div>
+                    </div>
+                    <div className="card-user-info">
+                        <div>Email | {userData.email}</div>
+                        <div>Instagram | {userData.instagram}</div>
+                        <div>More | {userData.more}</div>
+                    </div>
+                </div>
             </div>
 
             {showPopup && (

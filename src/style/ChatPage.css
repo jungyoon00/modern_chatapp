@@ -147,6 +147,10 @@ url('https://fonts.googleapis.com/css2?family=Roboto+Slab&family=Rubik:ital,wght
   margin-right: 10px;
 }
 
+.small-profile:hover {
+  cursor: pointer;
+}
+
 .chat-output .placeholder {
   font-family: 'omyu_pretty', sans-serif;
   text-align: center;
@@ -412,4 +416,101 @@ url('https://fonts.googleapis.com/css2?family=Roboto+Slab&family=Rubik:ital,wght
   cursor: pointer;
   font-size: 14px;
   transition: background-color 0.3s;
+}
+
+/* 전체 화면 어두운 배경 */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease-in-out;
+  z-index: 999;
+}
+
+.overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* 프로필 카드 슬라이드 */
+.card-slide-container {
+  position: fixed;
+  top: 50%;
+  left: 100%; /* 초기 위치: 화면 오른쪽 밖 */
+  transform: translateY(-50%);
+  width: 600px;
+  height: 288px;
+  background-color: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  padding: 20px;
+  transition: left 0.3s ease-in-out;
+  z-index: 1000;
+}
+
+.card-slide-container.show {
+  left: calc(50% - 300px); /* 화면 가운데로 슬라이드 */
+}
+
+/* 프로필 카드 내부 스타일 */
+.card-profile-frame {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-profile-header {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.card-profile-icon {
+  width: 80px;
+  height: 80px;
+  margin-right: 20px;
+  border: 2px solid black;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: white;
+}
+
+.card-profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-placeholder-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  font-size: 12px;
+  color: black;
+  text-align: center;
+}
+
+.card-profile-name {
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  font-family: 'Londrina Shadow', serif;
+  font-size: 35px;
+  font-weight: bold;
+  color: black;
+  margin-top: 20px;
+}
+
+.card-user-info {
+  font-family: 'omyu_pretty', sans-serif;
+  margin-left: 10px;
+  margin-top: 20px;
+  font-size: 16px;
+  font-weight: 500;
+  color: black;
+  line-height: 1.8;
 }

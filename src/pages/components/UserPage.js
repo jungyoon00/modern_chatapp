@@ -112,7 +112,7 @@ function UserPage(props) {
         <div className="user-wrapper">
             {isEditing ? (
                 // 수정 모드일 때 입력 필드 표시
-                <>
+                <div className="profile-edit-frame">
                     <div className="img-field profile-icon">
                         {uploadImgUrl ? (
                                 <img
@@ -151,10 +151,10 @@ function UserPage(props) {
                             <button className="quitEdit" onClick={onClickQuitEdit}>Quit</button>
                         </div>
                     </div>
-                </>
+                </div>
             ) : (
                 // 일반 모드일 때 텍스트만 표시
-                <>
+                <div className="profile-frame">
                     <div className="profile-header">
                         <div className="profile-icon">
                             {userData.profileImage ? (
@@ -171,7 +171,7 @@ function UserPage(props) {
                         <div>More      | {userData.userMore}</div>
                     </div>
                     <button className="editInfo" onClick={onClickEditInfo}>Edit</button>
-                </>
+                </div>
             )}
         </div>
     );
