@@ -26,7 +26,7 @@ function Signup() {
     const userAdder = async (userID) => {
         try {
             // Firestore의 UserInfo 컬렉션에 userID를 문서 ID로 사용하여 저장
-            await setDoc(doc(database, "UserInfo", userID), {profileImage: "", name: userID, email: "", instagram: "", more: "", friends: [], rooms: [], friends_queue: [], friends_asked: []});
+            await setDoc(doc(database, "UserInfo", userID), {profileImage: "", name: userID, email: "", instagram: "", more: "", friends: [], rooms: [], friends_queue: [], friends_asked: [], bg_color: "#ffffff", bg_img: ""});
         } catch (error) {
             console.error("Error creating user: ", error);
         }
