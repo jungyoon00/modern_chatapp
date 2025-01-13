@@ -5,6 +5,7 @@ import "../../style/ChatPage.css";
 
 import { CiLock } from "react-icons/ci";
 import { CiUnlock } from "react-icons/ci";
+import { IoSettingsSharp } from "react-icons/io5";
 
 function ChatPage(props) {
     const defaultProfileImg = "https://i.imgur.com/vGQOCga.jpeg";
@@ -25,9 +26,13 @@ function ChatPage(props) {
     const bottomRef = useRef(null);
     const [locked, setLocked] = useState(false);
     const [roomPW, setRoomPW] = useState("");
+    const [roomHidden, setRoomHidden] = useState(false);
+    const [showSettingView, setShowSettingView] = useState(false);
 
     const [userData, setUserData] = useState({});
     const [showCard, setShowCard] = useState(false);
+
+    const [createUser, setCreateUser] = useState("");
 
     useEffect(() => {
         const unsubscribe = onSnapshot(
@@ -208,6 +213,7 @@ function ChatPage(props) {
           time: serverTimestamp(),
           locked: locked,
           password: roomPW,
+          hidden: roomHidden,
         });
 
         const members = [props.userID, ...selectedFriends];
@@ -215,6 +221,8 @@ function ChatPage(props) {
         setRooms([...rooms, newRoomRef.id]);
         joinRoom(members, newRoomRef.id);
         setRoomPW("");
+        setRoomHidden(false);
+        setLocked(false);
         togglePopup();
     }
 
@@ -224,6 +232,10 @@ function ChatPage(props) {
 
     function handleRoomPW(e) {
         setRoomPW(e.target.value);
+    }
+
+    function handleSetting() {
+        setShowSettingView(!showSettingView);
     }
 
     function checkRoomPW() {
@@ -262,6 +274,20 @@ function ChatPage(props) {
         setShowCard(false);
     }
 
+    const handleRoomHidden = (e) => {
+        setRoomHidden(e.target.checked);
+    }
+
+    async function changeRoomSetting() {
+        const roomRef = doc(database, "ChatRooms", roomID);
+
+        await updateDoc(roomRef, {
+            hidden: roomHidden,
+        });
+
+        setShowSettingView(false);
+    }
+
     return (
         <div className="chat-wrapper">
             <div className="rooms-view">
@@ -270,7 +296,7 @@ function ChatPage(props) {
                 </div>
                 {datas.map((data) => (
                     <div key={data.id}>
-                        <button className="room-list" value={data.id} onClick={handleChatRoom}>
+                        <button className="room-list" value={data.id} onClick={(e) => {handleChatRoom(e); setCreateUser(data.createdBy);}}>
                             {data.title}
                         </button>
                     </div>
@@ -279,35 +305,45 @@ function ChatPage(props) {
             <div className="chats-view">
                 <div className="chat-output">
                     {selectedRoomID ? (
-                        <ul>
-                            {messages.map((message) => (
-                                <li
-                                    key={message.id}
-                                    className={message.userID === props.userID ? "sent" : "received"}
+                        <div className="chat-elements">
+                            {userID === createUser &&
+                                <button
+                                    className="chat-settings-btn"
+                                    onClick={() => handleSetting()}
                                 >
-                                    <p>
-                                        <span>
-                                            {message.userID === props.userID ? "" : <>
-                                            <img 
-                                                className="small-profile"
-                                                alt="profile"
-                                                src={selectedRoomProfiles[message.userID] || defaultProfileImg}
-                                                onClick={() => toggleCard(message.userID)}
-                                            ></img>
-                                            <strong>{message.userID}</strong>
-                                        </>}
-                                        </span>
-                                        {message.content}
-                                    </p>
-                                    <small>
-                                        {message.time
-                                            ? new Date(message.time.seconds * 1000).toLocaleString()
-                                            : "Sending..."}
-                                    </small>
-                                </li>
-                            ))}
-                            <div ref={bottomRef}></div>
-                        </ul>
+                                    <IoSettingsSharp size={20} color="black" />
+                                </button>
+                            }
+                            <ul>
+                                {messages.map((message) => (
+                                    <li
+                                        key={message.id}
+                                        className={message.userID === props.userID ? "sent" : "received"}
+                                    >
+                                        <p>
+                                            <span>
+                                                {message.userID === props.userID ? "" : <>
+                                                <img 
+                                                    className="small-profile"
+                                                    alt="profile"
+                                                    src={selectedRoomProfiles[message.userID] || defaultProfileImg}
+                                                    onClick={() => toggleCard(message.userID)}
+                                                ></img>
+                                                <strong>{message.userID}</strong>
+                                            </>}
+                                            </span>
+                                            {message.content}
+                                        </p>
+                                        <small>
+                                            {message.time
+                                                ? new Date(message.time.seconds * 1000).toLocaleString()
+                                                : "Sending..."}
+                                        </small>
+                                    </li>
+                                ))}
+                                <div ref={bottomRef}></div>
+                            </ul>
+                        </div>
                     ) : (
                         <div className="placeholder">Select a chat room to view messages.</div>
                     )}
@@ -321,7 +357,7 @@ function ChatPage(props) {
                             onKeyDown={handleKeyPress}
                             placeholder="Message"
                         />
-                        <button className="emoji">🔥</button>
+                        <button className="emoji" onClick={() => alert("현재 개발 중인 기능입니다.\n학생들의 얼굴로 이모티콘 제작 예정입니다. \n자원/추천 받습니다.")}>🔥</button>
                         <button className="chat-enter" onClick={handleSendMessage}>Enter</button>
                     </div>
                 )}
@@ -385,6 +421,10 @@ function ChatPage(props) {
                         <button className="toggleLocker" onClick={handleLocking}>{locked ? <CiLock size={22} /> : <CiUnlock size={22} />}</button>
                         <input className={locked ? "roomPW-input" : "blind"} type="password" placeholder="Enter password" disabled={!locked} value={roomPW} onChange={handleRoomPW} />
                     </div>
+                    <div className="hidden-setting">
+                        <span>현재 멤버들 이외의 계정에게 이 방 숨기기</span>
+                        <input className="hidden-check" type="checkbox" onChange={handleRoomHidden} />
+                    </div>
                     <div className="button-container">
                         <button onClick={createRoom}>Create Room</button>
                         <button className="close-popup" onClick={togglePopup}>
@@ -407,6 +447,22 @@ function ChatPage(props) {
                     <div className="button-container">
                         <button className="popup-enter" onClick={checkRoomPW}>Enter</button>
                         <button className="close-popup" onClick={() => setShowPWView(false)}>
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {showSettingView && (
+                <div className="popup-setting-room">
+                    <h3>Settings</h3>
+                    <div className="hidden-setting">
+                        <span>현재 멤버들 이외의 계정에게 이 방 숨기기</span>
+                        <input className="hidden-check" type="checkbox" onChange={handleRoomHidden} />
+                    </div>
+                    <div className="button-container">
+                        <button className="popup-confirm" onClick={changeRoomSetting}>Confirm</button>
+                        <button className="close-popup" onClick={() => setShowSettingView(false)}>
                             Cancel
                         </button>
                     </div>

@@ -9,6 +9,8 @@ import { FaCheck } from "react-icons/fa";
 
 function MyPage(props) {
     const userID = props.userID;
+    const defaultProfileImg = "https://i.imgur.com/vGQOCga.jpeg";
+
     const [friendNum, setFriendNum] = useState(0);
     const [chatNum, setChatNum] = useState(0);
     const [waitingNum, setWaitingNum] = useState(0);
@@ -24,6 +26,9 @@ function MyPage(props) {
     const [showRemoveFriendPopup, setShowRemoveFriendPopup] = useState(false);
     const [showLeaveChatPopup, setShowLeaveChatPopup] = useState(false);
     const [showWaitingPopup, setShowWaitingPopup] = useState(false);
+
+    const [userData, setUserData] = useState({});
+    const [showCard, setShowCard] = useState(false);
 
     useEffect(() => {
         // Fetch user data (friends and rooms)
@@ -68,13 +73,31 @@ function MyPage(props) {
     }, []);
 
     useEffect(() => {
-        const unsubscribe = onSnapshot(doc(database, "UserInfo", userID), (snapshot) => {
+        const unsubscribe = onSnapshot(doc(database, "UserInfo", userID), async (snapshot) => {
             const data = snapshot.data();
-            setAllWaitings(data.friends_queue || []);
+            const friends_queue = data?.friends_queue || [];
+    
+            // Fetch user data for each userID in friends_queue
+            const waitingUsers = await Promise.all(
+                friends_queue.map(async (friendID) => {
+                    const docRef = doc(database, "UserInfo", friendID);
+                    const docSnap = await getDoc(docRef);
+    
+                    if (docSnap.exists()) {
+                        return { userID: friendID, ...docSnap.data() };
+                    } else {
+                        console.log(`No document found for userID: ${friendID}`);
+                        return null;
+                    }
+                })
+            );
+    
+            // Filter out any null results and update the state
+            setAllWaitings(waitingUsers.filter((user) => user !== null));
         });
-
-        return () => unsubscribe
-    }, []);
+    
+        return () => unsubscribe();
+    }, [userID]);
 
     useEffect(() => {
         const unsubscribe = onSnapshot(doc(database, "UserInfo", userID), (snapshot) => {
@@ -266,9 +289,37 @@ function MyPage(props) {
         (account) => account.id !== userID && friends.includes(account.id)
     )
 
-    const filteredRooms = allRooms.filter((room) => !rooms.includes(room.id));
+    const filteredRooms = allRooms.filter((room) => {
+        if (room.hidden) {
+            // room.hidden이 true인 경우 추가 조건: userID가 room.members에 포함되어야 함
+            return !rooms.includes(room.id) && room.members?.includes(userID);
+        }
+        // room.hidden이 false인 경우 기존 조건 유지
+        return !rooms.includes(room.id);
+    });
 
     const removeFilteredRooms = allRooms.filter((room) => rooms.includes(room.id));
+
+    async function getUserData(userID) {
+        const docRef = doc(database, "UserInfo", userID);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            setUserData(docSnap.data());
+        } else {
+            console.log("No such document!");
+        }
+    }
+
+    const toggleCard = (userID) => {
+        getUserData(userID);
+        setShowCard((prev) => !prev);
+    }
+
+    const closeCard = () => {
+        setUserData({});
+        setShowCard(false);
+    }
 
     return (
         <div className="mypage-wrapper">
@@ -303,6 +354,7 @@ function MyPage(props) {
                     <span>{waitingNum}</span>
                 </div>
             </div>
+
             {/* Remove Friend Popup */}
             {showRemoveFriendPopup && (
                 <div className="popup">
@@ -318,6 +370,12 @@ function MyPage(props) {
                             .filter((account) => account.id.includes(searchQuery))
                             .map((account) => (
                                 <li key={account.id}>
+                                    <img 
+                                        className="small-profile"
+                                        alt="profile"
+                                        src={account.profileImage || defaultProfileImg}
+                                        onClick={() => toggleCard(account.id)}
+                                    ></img>
                                     {account.id}
                                     <button onClick={() => removeFriend(account.id)}>Remove</button>
                                 </li>
@@ -371,6 +429,12 @@ function MyPage(props) {
                                     key={account.id}
                                     className={allAsked.includes(account.id) ? "asked" : ""}
                                 >
+                                    <img 
+                                        className="small-profile"
+                                        alt="profile"
+                                        src={account.profileImage || defaultProfileImg}
+                                        onClick={() => toggleCard(account.id)}
+                                    ></img>
                                     {account.id}
                                     <button className={allAsked.includes(account.id) ? "disabled" : ""} onClick={() => askFriend(account.id)}>Add</button>
                                 </li>
@@ -418,13 +482,19 @@ function MyPage(props) {
                     />
                     <ul className="popup-list">
                         {allWaitings
-                            .filter((waiting) => waiting.includes(searchQuery))
+                            .filter((waiting) => waiting.userID.includes(searchQuery))
                             .map((waiting) => (
-                                <li key={waiting}>
-                                    {waiting}
+                                <li key={waiting.userID}>
+                                    <img 
+                                        className="small-profile"
+                                        alt="profile"
+                                        src={waiting.profileImage || defaultProfileImg}
+                                        onClick={() => toggleCard(waiting.userID)}
+                                    ></img>
+                                    {waiting.userID}
                                     <span className="waiting-buttons">
-                                        <button onClick={() => addFriend(waiting)}>Accept</button>
-                                        <button onClick={() => slapFriend(waiting)}>Decline</button>
+                                        <button onClick={() => addFriend(waiting.userID)}>Accept</button>
+                                        <button onClick={() => slapFriend(waiting.userID)}>Decline</button>
                                     </span>
                                 </li>
                             ))}
@@ -433,6 +503,36 @@ function MyPage(props) {
                     <button className="close-popup" onClick={toggleWaitingPopup}>Close</button>
                 </div>
             )}
+
+                        {/* Dard Background */}
+                        <div
+                className={`overlay ${showCard ? "show" : ""}`}
+                onClick={closeCard}
+            ></div>
+            {/* Card */}
+            <div className={`card-slide-container ${showCard ? "show" : ""}`}>
+                <div className="card-profile-frame">
+                    <div className="card-profile-header">
+                        <div className="card-profile-icon">
+                            {userData.profileImage ? (
+                                <img
+                                    src={userData.profileImage || defaultProfileImg}
+                                    alt="User Profile"
+                                    className="card-profile-image"
+                                />
+                            ) : (
+                                <div className="card-placeholder-icon">No Image</div>
+                            )}
+                        </div>
+                        <div className="card-profile-name">{userData.name}</div>
+                    </div>
+                    <div className="card-user-info">
+                        <div>Email | {userData.email}</div>
+                        <div>Instagram | {userData.instagram}</div>
+                        <div>More | {userData.more}</div>
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }

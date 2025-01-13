@@ -104,7 +104,7 @@ function Signup() {
                     <button className="confirm" onClick={onClickConfirmBtn}>Confirm</button>
                 </div>
                 <div className="login-link">
-                    <a href="/">Login</a>
+                    <a href="/login">Login</a>
                 </div>
             </div>
 
@@ -113,7 +113,7 @@ function Signup() {
                 <div className="modal-content">
                     <h3>Alert</h3>
                     <p>Your account is created.</p>
-                    <button className="modal-close" onClick={() => {setShowModal(false); navigate("/")}}>OK</button>
+                    <button className="modal-close" onClick={() => {setShowModal(false); navigate("/login")}}>OK</button>
                 </div>
             </div>}
         </div>
